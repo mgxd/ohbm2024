@@ -1,0 +1,18 @@
+---
+title: HBCD MRI dataflow
+---
+flowchart LR
+    A{scanner} -. Quality Control .-> BIDS
+    BIDS --> BIBSNet
+    BIDS --> fMRIPrep-infant
+    BIDS --> QSIprep
+    BIBSNet --> fMRIPrep-infant
+    fMRIPrep-infant -- fMRI --> XCP-D
+    fMRIPrep-infant -- DWI --> QSIprep
+    fMRIPrep-infant -- MRS --> Osprey
+    subgraph  
+        XCP-D
+        QSIprep
+        Osprey
+    end
+
