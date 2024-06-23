@@ -4,9 +4,9 @@ background-image: url("assets/ohbm24-bg.png")
 background-size: 100%
 
 .center-div[
-<a href="https://mgxd.github.io/OHBM2024">
+<a href="https://mgxd.github.io/ohbm2024">
 <img src="assets/ohbm2024-talk-qr.png" alt="Talk-QR-Code" style="width: 40%" />
-<p>https://mgxd.github.io/OHBM2024</p>
+<p>https://mgxd.github.io/ohbm2024</p>
 </a>
 ]
 
@@ -316,7 +316,7 @@ background-size: 100%
 
 
 .center[
-<a href="https://mgxd.github.io/OHBM2024/"><img src="assets/ohbm2024-talk-qr.png" alt="workflow" style="width: 10%" /></a>
+<a href="https://mgxd.github.io/ohbm2024/"><img src="assets/ohbm2024-talk-qr.png" alt="workflow" style="width: 10%" /></a>
 
 ## Thank you
 
