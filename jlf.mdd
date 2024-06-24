@@ -1,0 +1,26 @@
+---
+title: Joint Label Fusion
+---
+flowchart LR
+
+    subgraph Anatomical-Registration
+        Atlas1Anatomical --> AnatomicalReference
+        Atlas2Anatomical --> AnatomicalReference
+        Atlas3Anatomical --> AnatomicalReference
+    end
+
+    subgraph Segmentations
+        Atlas1Seg
+        Atlas2Seg
+        Atlas3Seg
+    end
+
+    AnatomicalReference --> Atlas1xfm
+    AnatomicalReference --> Atlas2xfm
+    AnatomicalReference --> Atlas3xfm
+
+
+    Atlas1Seg --> Atlas1xfm --> A{Voting}
+    Atlas2Seg --> Atlas2xfm --> A{Voting}
+    Atlas3Seg --> Atlas3xfm --> A{Voting}
+    A{Voting} --> OutputSegmentation

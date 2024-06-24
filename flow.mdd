@@ -10,9 +10,8 @@ flowchart LR
     fMRIPrep-infant -- fMRI --> XCP-D
     fMRIPrep-infant -- DWI --> QSIprep
     fMRIPrep-infant -- MRS --> Osprey
-    subgraph  
+    subgraph
         XCP-D
         QSIprep
         Osprey
     end
-

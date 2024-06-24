@@ -5,7 +5,7 @@ background-size: 100%
 
 .center-div[
 <a href="https://mgxd.github.io/ohbm2024">
-<img src="assets/ohbm2024-talk-qr.png" alt="Talk-QR-Code" style="width: 40%" />
+<img src="assets/talk-qr-ohbm2024.png" alt="Talk-QR-Code" style="width: 40%" />
 <p>https://mgxd.github.io/ohbm2024</p>
 </a>
 ]
@@ -56,9 +56,11 @@ layout: true
 
 .column[.large[
 
-* Road to fMRIPrep-Infants
+* Road to fMRIPrep-Infants / NiBabies
 
-* HBCD and Longitudinal Studies
+* A Growing Need
+  * Longitudinal Studies
+  * Differences from Adults
 
 * Workflow Adaptations
 
@@ -68,23 +70,43 @@ layout: true
 
 ---
 
-# fMRIPrep, then
+# fMRIPrep, circa 2016
 
-- fMRIPrep - a preprocessing pipeline for fMRI
+### Building a following with a philosophy
 
-  - Accessible - containerized environment
-  - Robust - adaptive workflow based on available data
-  - Transparent - open source source code, produces reports for additional information
-    - figures for vital preprocessing steps
-    - metadata (scans overview, version / commands, errors)
+--
+
+* **Easy-to-use**
+
+  * *Adheres to a common structure, containerized environment provides reproducibility*
 
 ???
 
-minimal requirements -> (BIDS)
-analysis-agnostic processing -> BIDS-derivatives, do not lock you into a particular postprocessing stream
-a slight tradeoff is implicitly taken - analysis may not be hypertuned for particular parameters, but a standard of processing steps is good for a field with lots of potential for variation.
+structure -> BIDS
+container -> BIDS-App
+container freezes dependency versioning.
 
-modern software-engineering standards
+--
+
+* **Robust**
+
+  * *Dynamically adapt workflow based on available data, to handle diverse acquisition protocols and scanner manufacturers*
+
+???
+
+analysis-agnostic processing -> BIDS-derivatives, do not lock you into a particular postprocessing stream
+
+--
+
+* **Transparent**
+
+  * *Visual reports outline performance across various steps*
+  * *Code openly available*
+
+???
+
+And from this came a package for preprocessing scanner data.
+This was all bundled within a single monolith application.
 
 ---
 
@@ -105,14 +127,20 @@ Throughout development, we found splitting these components helped in a few ways
 1. Allow other NiPreps (or any user in the community) to leverage or build off from.
 
 ---
-background-color: #000000
 
-<br><br><br>
+# Avalanche of Large scale Longitudinal Studies
 
-.center-div[
-.red[
-# So let's just use fMRIPrep on babies.
-]]
+* Developing Human Connectome Project (2010)
+
+* Adolescent Brain Cognitive Development Study (2017)
+
+* Baby Connectome Project (2016)
+
+* HEALthy Brain and Child Development (2023)
+
+???
+
+Multi-site, multi-session data acquisition is only increasing in popularity.
 
 ---
 
@@ -129,6 +157,10 @@ types of data through the early stages of development.
 
 Over 7000, multi-site (27 recruitment sites in the USA), and multiple scanner manufacturers (Siemens/GE/Philips).
 
+HBCD - 9am on Wednesday symposium - Grand Ballroom 104-105
+
+Wednesday morning (9am) symposium  Grandballroom 104-105
+
 ---
 
 # HBCD study workflow
@@ -139,7 +171,17 @@ Over 7000, multi-site (27 recruitment sites in the USA), and multiple scanner ma
 
 ???
 
-This shows a subset of the MRI processing
+This shows a subset of the MRI data flow in the HBCD study.
+
+---
+background-color: #000000
+
+<br><br><br>
+
+.center-div[
+.red[
+# So let's just use fMRIPrep on babies.
+]]
 
 ---
 
@@ -203,7 +245,7 @@ Multi-session studies, each time point should be analysed differently as signifi
 
 #### *Allow connection slots for previous computed derivatives*
 
-Previously self contained, but should be a tool where users can manually intervene, or quickly test alternative methods.
+Previously self contained, but should be a tool where users can manually intervene, or test alternative methods.
 
 ---
 
@@ -211,13 +253,14 @@ Previously self contained, but should be a tool where users can manually interve
 
 ## Brain Extraction
 
-* Modified antsBrainExtraction workflow, using input T2w -> atlas, and then coregistering functionals.
+* Modified `antsBrainExtraction` workflow, using input T2w -> atlas, and then coregistering structurals (if available).
 
-* Two new infant templates, which includes various timepoints (i.e. cohorts) which can be age matched to more similarly align with expected participant
+* Infant templates, which includes various timepoints (i.e. cohorts) which can be age matched to the participant.
 
 ???
 
-UNC infant template (default) - neonate, 1 year old, 2 year old,
+UNC infant template (default) - neonate, 1 year old, 2 year old, (You may hear elements in Fan's presentation)
+
 MNIInfant - multiple timepoints, though masks leave something to be desired
 
 ---
@@ -228,16 +271,26 @@ MNIInfant - multiple timepoints, though masks leave something to be desired
 
 * Addition of Joint Label Fusion ([Wang 2013](https://doi.org/10.3389/fninf.2013.00027)), to increase robustness of tissue, cortical, and subcortical segmentation.
 
+* Atlases include pre-labeled segmentations, as well as a T1w or T2w reference.
+
+.center-div[
+<img src="assets/jlf.svg" alt="JLF", style="width: 80%"/>
+]
+
 ???
 
 FSL FAST unreliable with ambiguous tissue contrast.
+
+Pre-labeled includes manual labelling by an expert, or supervised labelling by an automatic source.
 
 Expert labeled images (atlases) using a registration and voting algorithm.
 
 Limitations here:
 
-1. Increased processing time (as many image registrations as atlases)
-1. Available age matched atlases.
+1. Ideally you need age-matched and accurately labeled atlases.
+1. Registration is an expensive operation, and multiple atlases are recommended to account for individual difference.
+
+There is an effort to aggregate and distribute these atlases
 
 ---
 
@@ -248,10 +301,10 @@ Limitations here:
 
 ## Brain Segmentation (cont.)
 
-Alternatively, deep learning methods are becoming more desirable:
+Alternatively, deep learning methods are becoming more desirable alternative due to:
 
 * Decrease processing time
-* Perform comparable or better
+* Comparable or improved performance
 
 ]
 
@@ -264,13 +317,36 @@ Alternatively, deep learning methods are becoming more desirable:
 Additionally, BIBSNet is a deep learning network for segmenting baby brains, built ontop of nnU-net.
 
 This greatly reduces processing time, while 
+
 ---
 
 # Adaptations: Processing Steps
 
 ## Surface Reconstruction
 
-- FreeSurfer's recon-all has shown great performance for adults, and even children as young as 24mo+, but struggles in initial stages.
+* FreeSurfer's recon-all has shown great performance for adults, and even children as young as 24mo+, but struggles in early development.
+
+--
+
+* Infant FreeSurfer ([Zollei 2020](https://doi.org/10.1016/j.neuroimage.2020.116946)) provides a similar process, with modifications to handle weaker GM/WM contrast.
+
+???
+
+Good alternative if tissue contrast is reasonable, but is difficult to rely on only single T1w channel.
+
+--
+
+* M-CRIB-S ([Adamson 2020](https://doi.org/10.1038/s41598-020-61326-2)) leverages novel surface atlases, along with a T2w channel, along with dHCP surface reconstruction methods ([Makropoulos 2018](https://doi.org/10.1016/j.neuroimage.2018.01.054))
+
+???
+
+Surface pipeline leveraging the Melbourne Children’s Regional Infant Brain atlases
+
+voxel-based parcellations compatible with the Desikan-Killiany (DK) and the Desikan-Killiany-Tourville (DKT) cortical labelling schemes.
+
+--
+
+### All three options are availabe, and may out-perform each other at various developmental stages
 
 ---
 
@@ -278,9 +354,17 @@ This greatly reduces processing time, while
 
 ## Subcortical Structure Alignment
 
-- To avoid the size problem (small structures transformed to adult template, treated as a big blob)
-first register to similar space (MNIInfant), and then register each subcortical region independently
-to MNI152 space, reducing the distortion per structure. (figure??)
+* Modification during CIFTI generation, to improve subcortical structure accuracy throughout registrations.
+
+* HCP grayordinates are in fsLR space, which uses the standard adult MNI template for volumetric components.
+
+* Rather than registering the entire brain in one shot from infant to adult:
+  * The segmentation is registered and applied to the infant MNI template.
+  * Each region is individually registered to the adult MNI template
+
+???
+
+Similar to why we are using alternative infant templates for brain extraction, we want to minimize distortion when transforming an image to a standard space.
 
 ---
 
@@ -288,23 +372,37 @@ to MNI152 space, reducing the distortion per structure. (figure??)
 
 Techniques, algorithms, and alternatives may advance, but fostering a community will help much more in the long run.
 
+## GitHub: [https://github.com/nipreps/nibabies](https://github.com/nipreps/nibabies)
+  * Code, Error Reporting
+
+## NeuroStars: [https://neurostars.org/](https://neurostars.org/)
+  * General / Usage Questions
+
 ???
+
+As adoption grows, protocol details, scanner details, collection headaches, will need to considered. Sohye's data later will show you problems devlopers may run into.
 
 Less time spent focusing on turning knobs, and more time allowing researchers to answer their questions.
 
 ---
 
-## Conclusion
+# Conclusion
 
-* The need for standardization
-  * HBCD study
+.two-column[
 
-* Adaptations
-  * Brain Extraction
-  * Surface Reconstruction
-  * Subcortical alignment
+.column[.large[
 
-* Results
+* Road to fMRIPrep-Infants / NiBabies
+
+* A Growing Need
+  * Longitudinal Studies
+  * Differences from Adults
+
+* Workflow Adaptations
+
+]]
+
+]
 
 ???
 
@@ -316,7 +414,7 @@ background-size: 100%
 
 
 .center[
-<a href="https://mgxd.github.io/ohbm2024/"><img src="assets/ohbm2024-talk-qr.png" alt="workflow" style="width: 10%" /></a>
+<a href="https://mgxd.github.io/ohbm2024/"><img src="assets/talk-qr-ohbm2024.png" alt="workflow" style="width: 10%" /></a>
 
 ## Thank you
 
